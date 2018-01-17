@@ -7,6 +7,12 @@ Useful when you need to validate parameter data coming from untyped source(i.e h
 
 Using the param validation decorator you can declare your validation on the type annotation and leave the validation work to `class-validator` 
 
+## Install
+```bash
+npm install --save typescript-param-validator class-validators
+```
+
+## Examples
 ```typescript
 import { Validator, Validate } from 'typescript-param-validator';
 import { IsDate, IsNotEmpty, MaxDate, IsEmail, Length } from 'class-validators';
@@ -30,16 +36,28 @@ class TestClass {
   @Validate()
   methodName(@Validator() data: DataDto) {
     
-  } 
+  }
+
+  @Validate()
+  serverControllerEndpoint(@Validator(DataDto, 'body') req: Request) {
+    
+  }
 }
 
 const instance = new TestClass();
 
 // Will throw class-validator errors on runtime
 instance.methodName({
-  birthDate: new Date({
+  birthDate: new Date(),
+  description: '123',
+  email: 'fakemail'
+});
+
+instance.serverControllerEndpoint({
+  body: {
+    birthDate: new Date(),
     description: '123',
     email: 'fakemail'
-  })
+  }
 });
 ```
