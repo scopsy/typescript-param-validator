@@ -8,7 +8,7 @@ Useful when you need to validate parameter data coming from untyped source(i.e h
 Using the param validation decorator you can declare your validation on the type annotation and leave the validation work to `class-validator` 
 
 ```typescript
-import { Validate, ValidateParam } from 'typescript-param-validator';
+import { Validator, Validate } from 'typescript-param-validator';
 import { IsDate, IsNotEmpty, MaxDate, IsEmail, Length } from 'class-validators';
 
 class DataDto {
@@ -27,8 +27,8 @@ class DataDto {
 }
 
 class TestClass {
-  @Validate()
-  methodName(@ValidateParam() data: DataDto) {
+  @Validator()
+  methodName(@Validate() data: DataDto) {
     
   } 
 }
