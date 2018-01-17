@@ -1,7 +1,7 @@
 import { IsEmail } from 'class-validator';
 import {
   Validator,
-  ValidateParam,
+  Validate,
   ValidatorError
 } from '../src/typescript-param-validator';
 import { getNestedObjectProperty, getValidationErrors } from '../src/lib';
@@ -65,7 +65,7 @@ describe('Validator param tests', () => {
   it('should validate inferred ts type and throw', () => {
     class TestClass {
       @Validator()
-      method(@ValidateParam() body: BodyDto) {
+      method(@Validate() body: BodyDto) {
         return 123;
       }
     }
@@ -89,7 +89,7 @@ describe('Validator param tests', () => {
     class TestClass {
       @Validator()
       method(
-        @ValidateParam('body', BodyDto)
+        @Validate(BodyDto, 'body')
         body: any
       ) {
         return 123;
@@ -115,7 +115,7 @@ describe('Validator param tests', () => {
     class TestClass {
       @Validator()
       method(
-        @ValidateParam('body', BodyDto)
+        @Validate(BodyDto, 'body')
         req: any
       ) {
         return 123;
@@ -136,10 +136,7 @@ describe('Validator param tests', () => {
   it('should validate array types', () => {
     class TestClass {
       @Validator()
-      method(
-        @ValidateParam('', BodyDto)
-        body: BodyDto[]
-      ) {
+      method(@Validate(BodyDto) body: BodyDto[]) {
         return 123;
       }
     }

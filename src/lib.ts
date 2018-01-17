@@ -93,22 +93,24 @@ export function Validator(validatorOptions?: ValidatorOptions) {
 }
 
 /**
- * @param targetKey - when provided the validation will be performed on the provided key
+ * When provided the validatorClass validation will be performed on the provided key or root object
  * instead of argument itself. useful for when the validator data is located in a nested object.
+ *
  * @param validatorClass - the validator class to use instead of the inferred ts type
+ * @param targetKey -
  * @returns {(target: any, key: string, index) => void}
  */
-export function ValidateParam(targetKey?: any, validatorClass?: any) {
+export function Validate(validatorClass?: any, targetKey?: string) {
   return (target: any, key: string, index: number) => {
     const indices =
       Reflect.getMetadata(`validate_${key}_parameters`, target, key) || [];
 
-    if (validatorClass !== undefined && targetKey !== undefined) {
+    if (validatorClass !== undefined) {
       const targets =
         Reflect.getMetadata(`validate_${key}_targets`, target, key) || {};
       targets[index] = {
         validatorClass,
-        targetKey
+        targetKey: targetKey || ''
       };
       Reflect.defineMetadata(`validate_${key}_targets`, targets, target, key);
     }
