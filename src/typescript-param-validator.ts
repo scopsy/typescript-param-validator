@@ -1,1 +1,1 @@
-export { Validate, ValidateParam, ValidatorError } from './lib'
+export { Validator, ValidateParam, ValidatorError } from './lib';

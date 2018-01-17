@@ -1,12 +1,12 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
-import typescript from 'rollup-plugin-typescript2'
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import sourceMaps from 'rollup-plugin-sourcemaps';
+import camelCase from 'lodash.camelcase';
+import typescript from 'rollup-plugin-typescript2';
 
-const pkg = require('./package.json')
+const pkg = require('./package.json');
 
-const libraryName = 'typescript-param-validator'
+const libraryName = 'typescript-param-validator';
 
 export default {
   input: `src/${libraryName}.ts`,
@@ -28,9 +28,9 @@ export default {
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
-    // resolve(),
+    resolve(),
 
     // Resolve source maps to the original source
     sourceMaps(),
   ],
-}
+};

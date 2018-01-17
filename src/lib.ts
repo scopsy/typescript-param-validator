@@ -1,60 +1,60 @@
-import 'reflect-metadata'
-import { plainToClass } from 'class-transformer'
+import 'reflect-metadata';
+import { plainToClass } from 'class-transformer';
 import {
   Validator as ClassValidator,
   ValidationError,
   ValidatorOptions
-} from 'class-validator'
+} from 'class-validator';
 
 export class ValidatorError extends Error {
   constructor(public validationErrors: ValidationError[]) {
-    super('Validation Error')
+    super('Validation Error');
   }
 }
 
-export function Validate(validatorOptions?: ValidatorOptions) {
+export function Validator(validatorOptions?: ValidatorOptions) {
   return (target: any, key: string, descriptor: PropertyDescriptor) => {
-    const originalMethod = descriptor.value
+    const originalMethod = descriptor.value;
     const indices = Reflect.getMetadata(
       `validate_${key}_parameters`,
       target,
       key
-    )
-    const types = Reflect.getMetadata('design:paramtypes', target, key)
+    );
+    const types = Reflect.getMetadata('design:paramtypes', target, key);
     const targets =
-      Reflect.getMetadata(`validate_${key}_targets`, target, key) || {}
+      Reflect.getMetadata(`validate_${key}_targets`, target, key) || {};
 
     descriptor.value = function(...args: any[]) {
-      const errors = []
+      const errors = [];
 
       if (Array.isArray(indices)) {
         for (let i = 0; i < args.length; i++) {
           if (indices.indexOf(i) !== -1) {
-            let value = args[i]
-            let validatorClass = types[i]
+            let value = args[i];
+            let validatorClass = types[i];
 
             // if targets provided replace the value and validator classes
             if (targets && targets[i]) {
-              value = getNestedObjectProperty(value, targets[i].targetKey)
-              validatorClass = targets[i].validatorClass
+              value = getNestedObjectProperty(value, targets[i].targetKey);
+              validatorClass = targets[i].validatorClass;
               // no value found under the specified key
               if (!value) {
-                const error = new ValidationError()
+                const error = new ValidationError();
                 error.constraints = {
                   isDefined: `property ${targets[i].targetKey} is missing`
-                }
+                };
 
-                throw new ValidatorError([error])
+                throw new ValidatorError([error]);
               }
 
               if (Array.isArray(types[i].prototype)) {
                 if (!Array.isArray(value)) {
-                  const error = new ValidationError()
+                  const error = new ValidationError();
                   error.constraints = {
                     isArray: 'input param must be array'
-                  }
+                  };
 
-                  throw new ValidatorError([error])
+                  throw new ValidatorError([error]);
                 }
 
                 for (const argument of value) {
@@ -62,8 +62,8 @@ export function Validate(validatorOptions?: ValidatorOptions) {
                     validatorClass,
                     argument,
                     validatorOptions
-                  )
-                  if (paramErrors.length) errors.push(...paramErrors)
+                  );
+                  if (paramErrors.length) errors.push(...paramErrors);
                 }
               }
             }
@@ -73,21 +73,21 @@ export function Validate(validatorOptions?: ValidatorOptions) {
               validatorClass,
               value,
               validatorOptions
-            )
-            if (paramErrors.length) errors.push(...paramErrors)
+            );
+            if (paramErrors.length) errors.push(...paramErrors);
           }
         }
 
         if (errors.length) {
-          throw new ValidatorError(errors)
+          throw new ValidatorError(errors);
         }
 
-        return originalMethod.apply(this, args)
+        return originalMethod.apply(this, args);
       }
-    }
+    };
 
-    return descriptor
-  }
+    return descriptor;
+  };
 }
 
 /**
@@ -99,22 +99,22 @@ export function Validate(validatorOptions?: ValidatorOptions) {
 export function ValidateParam(targetKey?: any, validatorClass?: any) {
   return (target: any, key: string, index: number) => {
     const indices =
-      Reflect.getMetadata(`validate_${key}_parameters`, target, key) || []
+      Reflect.getMetadata(`validate_${key}_parameters`, target, key) || [];
 
     if (validatorClass !== undefined && targetKey !== undefined) {
       const targets =
-        Reflect.getMetadata(`validate_${key}_targets`, target, key) || {}
+        Reflect.getMetadata(`validate_${key}_targets`, target, key) || {};
       targets[index] = {
         validatorClass,
         targetKey
-      }
-      Reflect.defineMetadata(`validate_${key}_targets`, targets, target, key)
+      };
+      Reflect.defineMetadata(`validate_${key}_targets`, targets, target, key);
     }
 
-    indices.push(index)
+    indices.push(index);
 
-    Reflect.defineMetadata(`validate_${key}_parameters`, indices, target, key)
-  }
+    Reflect.defineMetadata(`validate_${key}_parameters`, indices, target, key);
+  };
 }
 
 export function getValidationErrors(
@@ -122,22 +122,22 @@ export function getValidationErrors(
   val: any,
   validatorOptions?: ValidatorOptions
 ): ValidationError[] {
-  const data = plainToClass(validatorClass, val)
-  const validator = new ClassValidator()
+  const data = plainToClass(validatorClass, val);
+  const validator = new ClassValidator();
 
-  return validator.validateSync(data, validatorOptions)
+  return validator.validateSync(data, validatorOptions);
 }
 
 export function getNestedObjectProperty(object: any, path: string) {
-  let value = object
-  if (!path) return value
+  let value = object;
+  if (!path) return value;
 
-  const list = path.split('.')
+  const list = path.split('.');
 
   for (let i = 0; i < list.length; i++) {
-    value = value[list[i]]
-    if (value === undefined) return undefined
+    value = value[list[i]];
+    if (value === undefined) return undefined;
   }
 
-  return value
+  return value;
 }

@@ -1,13 +1,13 @@
-import { IsEmail } from 'class-validator'
+import { IsEmail } from 'class-validator';
 import {
-  Validate,
+  Validator,
   ValidateParam,
   ValidatorError
-} from '../src/typescript-param-validator'
-import { getNestedObjectProperty, getValidationErrors } from '../src/lib'
+} from '../src/typescript-param-validator';
+import { getNestedObjectProperty, getValidationErrors } from '../src/lib';
 
 class BodyDto {
-  @IsEmail() name: string
+  @IsEmail() name: string;
 }
 
 describe('Validator param tests', () => {
@@ -18,165 +18,165 @@ describe('Validator param tests', () => {
           name: 'Danny'
         }
       }
-    }
+    };
 
-    const response = getNestedObjectProperty(data, 'body.item.name')
-    expect(response).toEqual('Danny')
-  })
+    const response = getNestedObjectProperty(data, 'body.item.name');
+    expect(response).toEqual('Danny');
+  });
 
   it('should return undefined property on non existent path', () => {
-    const data = {}
+    const data = {};
 
-    const response = getNestedObjectProperty(data, 'body.item.name')
-    expect(response).toBeUndefined()
-  })
+    const response = getNestedObjectProperty(data, 'body.item.name');
+    expect(response).toBeUndefined();
+  });
 
   it('should return item on first level', () => {
     const data = {
       body: {
         name: 'Danny'
       }
-    }
+    };
 
-    const response = getNestedObjectProperty(data, 'body')
-    expect(response.name).toEqual('Danny')
-  })
+    const response = getNestedObjectProperty(data, 'body');
+    expect(response.name).toEqual('Danny');
+  });
 
   it('should return validation errors', () => {
     const response = getValidationErrors(BodyDto, {
       name: 'sds'
-    })
+    });
 
-    expect(response.length).toEqual(1)
-    const { target, property, constraints } = response[0]
-    expect(target).toEqual({ name: 'sds' })
-    expect(property).toEqual('name')
-    expect(constraints.isEmail).toEqual('name must be an email')
-  })
+    expect(response.length).toEqual(1);
+    const { target, property, constraints } = response[0];
+    expect(target).toEqual({ name: 'sds' });
+    expect(property).toEqual('name');
+    expect(constraints.isEmail).toEqual('name must be an email');
+  });
 
   it('should not return validation errors', () => {
     const response = getValidationErrors(BodyDto, {
       name: 'sds@dasdas.com'
-    })
+    });
 
-    expect(response.length).toEqual(0)
-  })
+    expect(response.length).toEqual(0);
+  });
 
   it('should validate inferred ts type and throw', () => {
     class TestClass {
-      @Validate()
+      @Validator()
       method(@ValidateParam() body: BodyDto) {
-        return 123
+        return 123;
       }
     }
 
-    const instance = new TestClass()
+    const instance = new TestClass();
 
     try {
       instance.method({
         name: 'asdas'
-      })
+      });
     } catch (e) {
-      expect(e.message).toBe('Validation Error')
-      expect(e.validationErrors.length).toEqual(1)
+      expect(e.message).toBe('Validation Error');
+      expect(e.validationErrors.length).toEqual(1);
       expect(e.validationErrors[0].constraints.isEmail).toEqual(
         'name must be an email'
-      )
+      );
     }
-  })
+  });
 
   it('should validate specific validator type and key and fail', () => {
     class TestClass {
-      @Validate()
+      @Validator()
       method(
         @ValidateParam('body', BodyDto)
         body: any
       ) {
-        return 123
+        return 123;
       }
     }
 
-    const instance = new TestClass()
+    const instance = new TestClass();
 
     try {
       const response = instance.method({
         name: 'asdas'
-      })
+      });
     } catch (e) {
-      expect(e.message).toBe('Validation Error')
-      expect(e.validationErrors.length).toEqual(1)
+      expect(e.message).toBe('Validation Error');
+      expect(e.validationErrors.length).toEqual(1);
       expect(e.validationErrors[0].constraints.isDefined).toEqual(
         'property body is missing'
-      )
+      );
     }
-  })
+  });
 
   it('should validate specific validator type and key and succeed', () => {
     class TestClass {
-      @Validate()
+      @Validator()
       method(
         @ValidateParam('body', BodyDto)
         req: any
       ) {
-        return 123
+        return 123;
       }
     }
 
-    const instance = new TestClass()
+    const instance = new TestClass();
 
     const response = instance.method({
       body: {
         name: 'asdas@gmail.com'
       }
-    })
+    });
 
-    expect(response).toBe(123)
-  })
+    expect(response).toBe(123);
+  });
 
   it('should validate array types', () => {
     class TestClass {
-      @Validate()
+      @Validator()
       method(
         @ValidateParam('', BodyDto)
         body: BodyDto[]
       ) {
-        return 123
+        return 123;
       }
     }
 
-    const instance = new TestClass()
+    const instance = new TestClass();
 
     const response = instance.method([
       {
         name: 'asdas@gmail.com'
       }
-    ])
-    expect(response).toBe(123)
+    ]);
+    expect(response).toBe(123);
 
     try {
       instance.method([
         {
           name: 'asdasm'
         }
-      ])
+      ]);
     } catch (e) {
-      expect(e.message).toBe('Validation Error')
-      expect(e.validationErrors.length).toEqual(1)
+      expect(e.message).toBe('Validation Error');
+      expect(e.validationErrors.length).toEqual(1);
       expect(e.validationErrors[0].constraints.isEmail).toEqual(
         'name must be an email'
-      )
+      );
     }
 
     try {
       instance.method({
         name: 'asdasm'
-      } as any)
+      } as any);
     } catch (e) {
-      expect(e.message).toBe('Validation Error')
-      expect(e.validationErrors.length).toEqual(1)
+      expect(e.message).toBe('Validation Error');
+      expect(e.validationErrors.length).toEqual(1);
       expect(e.validationErrors[0].constraints.isArray).toEqual(
         'input param must be array'
-      )
+      );
     }
-  })
-})
+  });
+});
