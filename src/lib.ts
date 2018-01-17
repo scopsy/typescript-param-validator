@@ -14,7 +14,7 @@ export class ValidatorError extends Error {
   }
 }
 
-export function Validator(validatorOptions?: ValidatorOptions) {
+export function Validate(validatorOptions?: ValidatorOptions) {
   return (target: any, key: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
     const indices = Reflect.getMetadata(
@@ -100,7 +100,7 @@ export function Validator(validatorOptions?: ValidatorOptions) {
  * @param targetKey -
  * @returns {(target: any, key: string, index) => void}
  */
-export function Validate(validatorClass?: any, targetKey?: string) {
+export function Validator(validatorClass?: any, targetKey?: string) {
   return (target: any, key: string, index: number) => {
     const indices =
       Reflect.getMetadata(`validate_${key}_parameters`, target, key) || [];

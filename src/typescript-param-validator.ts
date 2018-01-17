@@ -1,1 +1,1 @@
-export { Validator, Validate, ValidatorError } from './lib';
+export { Validate, Validator, ValidatorError } from './lib';

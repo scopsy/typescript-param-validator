@@ -27,8 +27,8 @@ class DataDto {
 }
 
 class TestClass {
-  @Validator()
-  methodName(@Validate() data: DataDto) {
+  @Validate()
+  methodName(@Validator() data: DataDto) {
     
   } 
 }

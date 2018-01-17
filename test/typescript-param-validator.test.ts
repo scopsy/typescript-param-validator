@@ -1,7 +1,7 @@
 import { IsEmail } from 'class-validator';
 import {
-  Validator,
   Validate,
+  Validator,
   ValidatorError
 } from '../src/typescript-param-validator';
 import { getNestedObjectProperty, getValidationErrors } from '../src/lib';
@@ -10,7 +10,7 @@ class BodyDto {
   @IsEmail() name: string;
 }
 
-describe('Validator param tests', () => {
+describe('Validate param tests', () => {
   it('should selected nested property', () => {
     const data = {
       body: {
@@ -64,8 +64,8 @@ describe('Validator param tests', () => {
 
   it('should validate inferred ts type and throw', () => {
     class TestClass {
-      @Validator()
-      method(@Validate() body: BodyDto) {
+      @Validate()
+      method(@Validator() body: BodyDto) {
         return 123;
       }
     }
@@ -87,9 +87,9 @@ describe('Validator param tests', () => {
 
   it('should validate specific validator type and key and fail', () => {
     class TestClass {
-      @Validator()
+      @Validate()
       method(
-        @Validate(BodyDto, 'body')
+        @Validator(BodyDto, 'body')
         body: any
       ) {
         return 123;
@@ -113,9 +113,9 @@ describe('Validator param tests', () => {
 
   it('should validate specific validator type and key and succeed', () => {
     class TestClass {
-      @Validator()
+      @Validate()
       method(
-        @Validate(BodyDto, 'body')
+        @Validator(BodyDto, 'body')
         req: any
       ) {
         return 123;
@@ -135,8 +135,8 @@ describe('Validator param tests', () => {
 
   it('should validate array types', () => {
     class TestClass {
-      @Validator()
-      method(@Validate(BodyDto) body: BodyDto[]) {
+      @Validate()
+      method(@Validator(BodyDto) body: BodyDto[]) {
         return 123;
       }
     }
