@@ -9,6 +9,8 @@ import {
 export class ValidatorError extends Error {
   constructor(public validationErrors: ValidationError[]) {
     super('Validation Error');
+
+    Object.setPrototypeOf(this, ValidatorError.prototype);
   }
 }
 
