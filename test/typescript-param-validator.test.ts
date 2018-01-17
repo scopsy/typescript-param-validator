@@ -1,9 +1,10 @@
 import { IsEmail } from 'class-validator'
-import { Validate, ValidateParam, ValidatorError } from '../src'
 import {
-  getNestedObjectProperty,
-  getValidationErrors
+  Validate,
+  ValidateParam,
+  ValidatorError
 } from '../src/typescript-param-validator'
+import { getNestedObjectProperty, getValidationErrors } from '../src/lib'
 
 class BodyDto {
   @IsEmail() name: string
