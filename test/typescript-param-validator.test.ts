@@ -64,7 +64,9 @@ describe('Validator param tests', () => {
   it('should validate inferred ts type and throw', () => {
     class TestClass {
       @Validate()
-      method(@ValidateParam() body: BodyDto) {}
+      method(@ValidateParam() body: BodyDto) {
+        return 123
+      }
     }
 
     const instance = new TestClass()
@@ -88,7 +90,9 @@ describe('Validator param tests', () => {
       method(
         @ValidateParam('body', BodyDto)
         body: any
-      ) {}
+      ) {
+        return 123
+      }
     }
 
     const instance = new TestClass()
