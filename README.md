@@ -61,3 +61,22 @@ instance.serverControllerEndpoint({
   }
 });
 ```
+
+### Catching the Validation errors
+
+In order to catch the validation errors you need to check if the errors is instanceof `ValidatorError`;
+
+```typescript
+import { ValidatorError } from 'typescript-param-validator';
+
+try {
+  // ... code
+} catch (error) {
+  if (error instanceof ValidatorError) {
+    // here you have access to the validationErrors object that 
+    // will contain array of `class-validator` error objects.
+    console.log(error.validationErrors);
+  }
+}
+```
+
