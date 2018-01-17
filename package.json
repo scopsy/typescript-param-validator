@@ -3,9 +3,9 @@
   "version": "0.0.0-development",
   "description": "",
   "keywords": [],
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es5.js",
-  "typings": "dist/types/index.d.ts",
+  "main": "dist/typescript-param-validator.umd.js",
+  "module": "dist/typescript-param-validator.es5.js",
+  "typings": "dist/types/typescript-param-validator.d.ts",
   "files": [
     "dist"
   ],
@@ -32,9 +32,7 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once",
-    "prepush": "npm run test:prod && npm run build",
-    "commitmsg": "validate-commit-msg"
+    "travis-deploy-once": "travis-deploy-once"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
